@@ -90,3 +90,24 @@ func TestGetSingleByTitle(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Nil(t, bookNotFound)
 }
+
+func TestGetSingleByBookID(t *testing.T) {
+	// สร้าง repo ด้วย DB ที่ตั้งค่าแล้ว
+	bookRepo := repo.NewBooksRepo(db)
+
+	// have data
+	t.Run("Book exists", func(t *testing.T) {
+		result, err := bookRepo.GetSingleByBookID(2)
+		assert.NoError(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 2, result.BookID)
+		assert.Equal(t, "หนังสือ A", result.Title)
+	})
+
+	// not found
+	t.Run("Book not found", func(t *testing.T) {
+		result, err := bookRepo.GetSingleByBookID(0)
+		assert.NoError(t, err)
+		assert.Nil(t, result)
+	})
+}

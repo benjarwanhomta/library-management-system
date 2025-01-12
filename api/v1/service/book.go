@@ -8,4 +8,5 @@ import "library_management_system/api/v1/models"
 type BooksRepository interface {
 	CreateBooks(book *models.Books) error
 	GetSingleByTitle(title string) (*models.Books, error)
+	GetSingleByBookID(bookID int) (*models.Books, error)
 }

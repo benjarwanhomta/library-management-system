@@ -55,3 +55,19 @@ func (r *bookRepo) GetSingleByTitle(title string) (*models.Books, error) {
 
 	return &book, nil
 }
+
+// GetSingleByBookID implements service.BooksRepository.
+func (r *bookRepo) GetSingleByBookID(bookID int) (*models.Books, error) {
+	var book models.Books
+	result := r.DB.Preload("Author").Preload("Category").First(&book, bookID)
+	if result.Error != nil {
+		log.Printf("GetSingleByBookName is has error: %s", result.Error.Error())
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, nil
+	}
+
+	return &book, nil
+}

@@ -1,13 +1,20 @@
 package service
 
 import (
-	"fmt"
+	"errors"
 	"library_management_system/api/v1/models"
+
+	"gorm.io/gorm"
 )
 
 // BookService interface
 type BookService interface {
 	CreateBook(book *models.Books) (*models.Books, error)
+	EditBookByBookID(book *models.Books) (*models.Books, error)
+	DeleteBookByBookID(bookID int) error
+	GetDetailBookByBookID(bookID int) (*models.Books, error)
+	GetSearchBookAll(bookID int) ([]models.Books, error)
+	GetTopBorrowedBook(bookID int) ([]models.Books, error)
 }
 
 // bookService implementation
@@ -28,7 +35,6 @@ func (s *bookService) CreateBook(book *models.Books) (*models.Books, error) {
 		return nil, err
 	}
 
-	fmt.Println("bookDetail: ", bookDetail)
 	if bookDetail == nil {
 		err := s.bookRepo.CreateBooks(book)
 		if err != nil {
@@ -44,4 +50,38 @@ func (s *bookService) CreateBook(book *models.Books) (*models.Books, error) {
 	}
 
 	return bookDetail, nil
+}
+
+// DeleteBookByBookID implements BookService.
+func (s *bookService) DeleteBookByBookID(bookID int) error {
+	panic("unimplemented")
+}
+
+// EditBookByBookID implements BookService.
+func (s *bookService) EditBookByBookID(book *models.Books) (*models.Books, error) {
+	panic("unimplemented")
+}
+
+// GetDetailBookByBookID implements BookService.
+func (s *bookService) GetDetailBookByBookID(bookID int) (*models.Books, error) {
+	// get the book
+	bookDetail, err := s.bookRepo.GetSingleByBookID(bookID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrGetDetailNotFound
+		}
+		return nil, err
+	}
+
+	return bookDetail, nil
+}
+
+// GetSearchBookAll implements BookService.
+func (s *bookService) GetSearchBookAll(bookID int) ([]models.Books, error) {
+	panic("unimplemented")
+}
+
+// GetTopBorrowedBook implements BookService.
+func (s *bookService) GetTopBorrowedBook(bookID int) ([]models.Books, error) {
+	panic("unimplemented")
 }

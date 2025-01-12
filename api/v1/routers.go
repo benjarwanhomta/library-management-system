@@ -25,4 +25,9 @@ func RouteV1(app *fiber.App, db *gorm.DB) {
 
 	// Define routes for the v1 group
 	v1.Post("/add_book", bookHandler.CreateBook)
+	v1.Put("/edit_book", bookHandler.EditBook)
+	v1.Delete("/delete_book", bookHandler.DeleteBookByBookID)
+	v1.Get("/detail_book/:book_id", bookHandler.DetailBookByBookID)
+	v1.Get("/search_book_all", bookHandler.SearchBookAll)
+	v1.Get("/top_borrowed_book", bookHandler.TopBorrowedBook)
 }
