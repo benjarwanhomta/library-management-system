@@ -48,17 +48,30 @@ func (h *BookHandler) CreateBook(c *fiber.Ctx) error {
 
 // EditBook handles PUT request to edit a book
 func (h *BookHandler) EditBook(c *fiber.Ctx) error {
-	// var bookReq models.Books
-	// if err := c.BodyParser(&bookReq); err != nil {
-	// 	return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	// }
+	var bookReq models.Books
+	if err := c.BodyParser(&bookReq); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"message": "Failed to body parser edit book",
+			"status":  "Fail",
+			"value":   nil,
+		})
+	}
 
-	// bookResp, err := h.bookService.CreateBook(&bookReq)
-	// if err != nil {
-	// 	return c.Status(fiber.StatusInternalServerError).SendString("Failed to create book")
-	// }
+	bookResp, err := h.bookService.UpdateBook(&bookReq)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to edit book",
+			"status":  "Fail",
+			"value":   nil,
+		})
+	}
 
-	return c.Status(fiber.StatusOK).JSON(nil)
+	return c.Status(fiber.StatusOK).JSON(
+		fiber.Map{
+			"message": "Successfully edited",
+			"status":  "Success",
+			"value":   bookResp,
+		})
 }
 
 // DeleteBookByBookID handles Delete request to delete a book by book ID.

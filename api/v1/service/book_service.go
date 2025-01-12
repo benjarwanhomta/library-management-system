@@ -10,7 +10,7 @@ import (
 // BookService interface
 type BookService interface {
 	CreateBook(book *models.Books) (*models.Books, error)
-	EditBookByBookID(book *models.Books) (*models.Books, error)
+	UpdateBook(book *models.Books) (*models.Books, error)
 	DeleteBookByBookID(bookID int) error
 	GetDetailBookByBookID(bookID int) (*models.Books, error)
 	GetSearchBookAll(bookID int) ([]models.Books, error)
@@ -63,8 +63,26 @@ func (s *bookService) DeleteBookByBookID(bookID int) error {
 }
 
 // EditBookByBookID implements BookService.
-func (s *bookService) EditBookByBookID(book *models.Books) (*models.Books, error) {
-	panic("unimplemented")
+func (s *bookService) UpdateBook(book *models.Books) (*models.Books, error) {
+	// get the book
+	_, err := s.bookRepo.GetSingleByBookID(book.BookID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrGetDetailNotFound
+		}
+		return nil, err
+	}
+
+	bookLastUpdate, err := s.bookRepo.UpdateBook(book)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrGetDetailNotFound
+		}
+		return nil, err
+	}
+
+	return bookLastUpdate, nil
+
 }
 
 // GetDetailBookByBookID implements BookService.

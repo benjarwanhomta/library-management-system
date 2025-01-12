@@ -36,7 +36,6 @@ func init() {
 
 func TestCreateBooks(t *testing.T) {
 
-	// สร้าง repo ด้วย DB ที่ตั้งค่าแล้ว
 	bookRepo := repo.NewBooksRepo(db)
 
 	// ข้อมูลหนังสือที่ใช้ทดสอบ
@@ -44,7 +43,7 @@ func TestCreateBooks(t *testing.T) {
 		Title:        "Test Book",
 		AuthorID:     1,
 		CategoryID:   1,
-		ISBN:         "123456789",
+		ISBN:         "1234567890",
 		Description:  "A test book for integration test",
 		AvailableQTY: 10,
 	}
@@ -62,7 +61,6 @@ func TestCreateBooks(t *testing.T) {
 
 func TestGetSingleByTitle(t *testing.T) {
 
-	// สร้าง repo ด้วย DB ที่ตั้งค่าแล้ว
 	bookRepo := repo.NewBooksRepo(db)
 
 	// สร้างข้อมูลหนังสือ
@@ -92,7 +90,7 @@ func TestGetSingleByTitle(t *testing.T) {
 }
 
 func TestGetSingleByBookID(t *testing.T) {
-	// สร้าง repo ด้วย DB ที่ตั้งค่าแล้ว
+
 	bookRepo := repo.NewBooksRepo(db)
 
 	// have data
@@ -113,7 +111,7 @@ func TestGetSingleByBookID(t *testing.T) {
 }
 
 func TestDeleteByBookID(t *testing.T) {
-	// สร้าง repo ด้วย DB ที่ตั้งค่าแล้ว
+
 	bookRepo := repo.NewBooksRepo(db)
 
 	// have data
@@ -129,4 +127,61 @@ func TestDeleteByBookID(t *testing.T) {
 		assert.Error(t, err)
 		assert.NotNil(t, err)
 	})
+}
+
+func TestCreatdAndUpdateAndDeleteBook(t *testing.T) {
+	bookRepo := repo.NewBooksRepo(db)
+
+	// create a new book
+	book := &models.Books{
+		Title:        "Original Title",
+		AuthorID:     1,
+		CategoryID:   1,
+		PublishYear:  2020,
+		ISBN:         "9783-16-148450-0",
+		Description:  "Test Book Description",
+		AvailableQTY: 10,
+	}
+
+	err := bookRepo.CreateBooks(book)
+	assert.NoError(t, err)
+
+	result, err := bookRepo.GetSingleByTitle(book.Title)
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+
+	// update
+	updatedBook := &models.Books{
+		BookID:       result.BookID, // ใช้ BookID ที่ได้จากการสร้างหนังสือ
+		Title:        "Updated Title",
+		AuthorID:     1,
+		CategoryID:   1,
+		PublishYear:  2021,
+		ISBN:         "9783-16-148450-1",
+		Description:  "Updated Book Description",
+		AvailableQTY: 15,
+	}
+
+	// ทดสอบการอัปเดตหนังสือ
+	updatedBookResult, err := bookRepo.UpdateBook(updatedBook)
+	if err != nil {
+		t.Fatalf("UpdateBook failed: %v", err)
+	}
+
+	assert.Equal(t, "Updated Title", updatedBookResult.Title)
+	assert.Equal(t, 2021, updatedBookResult.PublishYear)
+	assert.Equal(t, 15, updatedBookResult.AvailableQTY)
+
+	resultBook, err := bookRepo.GetSingleByTitle(updatedBookResult.Title)
+	assert.NoError(t, err)
+	assert.NotNil(t, resultBook)
+
+	assert.Equal(t, "Updated Title", resultBook.Title)
+	assert.Equal(t, 2021, resultBook.PublishYear)
+	assert.Equal(t, 15, resultBook.AvailableQTY)
+
+	//delete
+	err = bookRepo.DeleteByBookID(resultBook.BookID)
+	assert.NoError(t, err)
+	assert.Nil(t, err)
 }

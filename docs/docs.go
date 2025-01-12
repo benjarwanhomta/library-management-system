@@ -110,6 +110,35 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/edit_book": {
+            "put": {
+                "description": "แก้ไขข้อมูลหนังสือ",
+                "summary": "แก้ไขข้อมูลหนังสือ",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "book",
+                        "description": "แก้ไขข้อมูลหนังสือที่ต้องการเพิ่ม",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/editBookReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/globalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -220,6 +249,45 @@ var doc = `{
                 }
             },
             "required": [
+                "title",
+                "author_id",
+                "category_id",
+                "publish_year",
+                "isbn",
+                "description",
+                "available_qty"
+            ]
+        },
+        "editBookReq": {
+            "type": "object",
+            "properties": {
+                "book_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "author_id": {
+                    "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "publish_year": {
+                    "type": "integer"
+                },
+                "isbn": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "available_qty": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "book_id",
                 "title",
                 "author_id",
                 "category_id",

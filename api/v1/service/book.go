@@ -10,4 +10,5 @@ type BooksRepository interface {
 	GetSingleByTitle(title string) (*models.Books, error)
 	GetSingleByBookID(bookID int) (*models.Books, error)
 	DeleteByBookID(bookID int) error
+	UpdateBook(book *models.Books) (*models.Books, error)
 }

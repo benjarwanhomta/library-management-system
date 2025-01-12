@@ -89,3 +89,17 @@ func (r *bookRepo) DeleteByBookID(bookID int) error {
 
 	return nil
 }
+
+func (r *bookRepo) UpdateBook(book *models.Books) (*models.Books, error) {
+	result := r.DB.Model(&models.Books{}).Where("book_id = ?", book.BookID).Updates(book)
+	if result.Error != nil {
+		log.Printf("UpdateBook has error: %s", result.Error.Error())
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("Book with ID %d not found", book.BookID)
+	}
+
+	return book, nil
+}
