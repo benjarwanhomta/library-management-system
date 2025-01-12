@@ -1,0 +1,93 @@
+{
+    "swagger": "2.0",
+    "basePath": "/api/v1",
+    "host": "localhost:3000",
+    "info": {
+        "contact": {
+            "email": "support@swagger.io",
+            "name": "API Support",
+            "url": "http://www.swagger.io/support"
+        },
+        "description": "This is a sample server for demonstrating Swagger API with Go and Fiber",
+        "termsOfService": "http://swagger.io/terms/",
+        "title": "Go Swagger Example API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/add_book": {
+            "post": {
+                "description": "เพิ่มข้อมูลหนังสือ",
+                "summary": "เพิ่มข้อมูลหนังสือ",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Book"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful add a new book",
+                        "schema": {
+                            "$ref": "#/definitions/globalResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Book": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "author_id": {
+                    "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "publish_year": {
+                    "type": "integer"
+                },
+                "isbn": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "available_qty": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "title",
+                "author_id",
+                "category_id",
+                "publish_year",
+                "isbn",
+                "description",
+                "available_qty"
+            ]
+        },
+        "globalResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}
