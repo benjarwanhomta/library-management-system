@@ -59,6 +59,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/bookDetailResponse"
+    
+    /delete_book/{book_id}:
+      delete:
+        description: "ลบข้อมูลหนังสือ"
+        summary: "ลบข้อมูลหนังสือตาม book_id"
+        parameters:
+          - name: book_id
+            in: path
+            description: "ID ของหนังสือ"
+            required: true
+            type: integer
+        responses:
+          200:
+            description: "ข้อมูลหนังสือ"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/definitions/globalResponse"
 
 definitions:
   globalResponse:

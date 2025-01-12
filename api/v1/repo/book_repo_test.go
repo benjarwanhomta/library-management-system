@@ -111,3 +111,22 @@ func TestGetSingleByBookID(t *testing.T) {
 		assert.Nil(t, result)
 	})
 }
+
+func TestDeleteByBookID(t *testing.T) {
+	// สร้าง repo ด้วย DB ที่ตั้งค่าแล้ว
+	bookRepo := repo.NewBooksRepo(db)
+
+	// have data
+	t.Run("Book exists", func(t *testing.T) {
+		err := bookRepo.DeleteByBookID(4)
+		assert.NoError(t, err)
+		assert.Nil(t, err)
+	})
+
+	// not found
+	t.Run("Book not found", func(t *testing.T) {
+		err := bookRepo.DeleteByBookID(0)
+		assert.Error(t, err)
+		assert.NotNil(t, err)
+	})
+}

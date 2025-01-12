@@ -63,8 +63,37 @@ func (h *BookHandler) EditBook(c *fiber.Ctx) error {
 
 // DeleteBookByBookID handles Delete request to delete a book by book ID.
 func (h *BookHandler) DeleteBookByBookID(c *fiber.Ctx) error {
+	bookIDParam := c.Params("book_id")
 
-	return c.Status(fiber.StatusOK).JSON(nil)
+	if bookIDParam == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "book_id is required",
+			"status":  "Fail",
+		})
+	}
+
+	// Convert bookIDParam to int
+	bookID, err := strconv.Atoi(bookIDParam)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid format for book_id",
+			"status":  "Fail",
+		})
+	}
+
+	// DeleteBookByBookID
+	errDeleteBook := h.bookService.DeleteBookByBookID(bookID)
+	if errDeleteBook != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": errDeleteBook.Error(),
+			"status":  "Fail",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Successfully delete book by book id",
+		"status":  "Success",
+	})
 }
 
 // DetailBookByBookID handles Get request to get a book by book ID.

@@ -2,6 +2,7 @@ package repo
 
 import (
 	"errors"
+	"fmt"
 	"library_management_system/api/v1/models"
 	"library_management_system/api/v1/service"
 	"log"
@@ -70,4 +71,21 @@ func (r *bookRepo) GetSingleByBookID(bookID int) (*models.Books, error) {
 	}
 
 	return &book, nil
+}
+
+// DeleteByBookID implements service.BooksRepository.
+func (r *bookRepo) DeleteByBookID(bookID int) error {
+	var book models.Books
+
+	result := r.DB.Where("book_id = ?", bookID).Delete(&book)
+	if result.Error != nil {
+		log.Printf("DeleteByBookID is has error: %s", result.Error.Error())
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("Book with ID %d not found", bookID)
+	}
+
+	return nil
 }

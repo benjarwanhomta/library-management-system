@@ -9,4 +9,5 @@ type BooksRepository interface {
 	CreateBooks(book *models.Books) error
 	GetSingleByTitle(title string) (*models.Books, error)
 	GetSingleByBookID(bookID int) (*models.Books, error)
+	DeleteByBookID(bookID int) error
 }

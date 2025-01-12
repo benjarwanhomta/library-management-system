@@ -54,7 +54,12 @@ func (s *bookService) CreateBook(book *models.Books) (*models.Books, error) {
 
 // DeleteBookByBookID implements BookService.
 func (s *bookService) DeleteBookByBookID(bookID int) error {
-	panic("unimplemented")
+	err := s.bookRepo.DeleteByBookID(bookID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // EditBookByBookID implements BookService.
