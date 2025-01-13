@@ -17,6 +17,10 @@ func RouteV1(app *fiber.App, db *gorm.DB) {
 	bookService := service.NewBooksService(bookRepo)
 	bookHandler := handlers.NewBookHandler(bookService)
 
+	borrowingRecordsRepo := repo.NewBorrowingRecordsRepo(db)
+	borrowService := service.NewBorrowService(borrowingRecordsRepo)
+	borrowHandler := handlers.NewBorrowHandler(borrowService)
+
 	// Swagger UI route
 	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
@@ -29,5 +33,5 @@ func RouteV1(app *fiber.App, db *gorm.DB) {
 	v1.Delete("/delete_book/:book_id", bookHandler.DeleteBookByBookID)
 	v1.Get("/detail_book/:book_id", bookHandler.DetailBookByBookID)
 	v1.Get("/search_book_all", bookHandler.SearchBookAll)
-	v1.Get("/top_borrowed_book", bookHandler.TopBorrowedBook)
+	v1.Get("/top_borrowed_book", borrowHandler.TopBorrowedBook)
 }

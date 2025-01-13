@@ -28,53 +28,6 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/search_book_all": {
-            "get": {
-                "description": "แสดงข้อมูลหนังสือที่ต้องการ",
-                "summary": "แสดงข้อมูลหนังสือที่ต้องการ",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "title",
-                        "description": "ชื่อของหนังสือที่ต้องการค้นหา",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "author",
-                        "description": "ชื่อผู้แต่งของหนังสือ",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "category",
-                        "description": "หมวดหมู่ของหนังสือ",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/globalResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/add_book": {
             "post": {
                 "description": "เพิ่มข้อมูลหนังสือ",
@@ -180,6 +133,71 @@ var doc = `{
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/definitions/globalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search_book_all": {
+            "get": {
+                "description": "แสดงข้อมูลหนังสือที่ต้องการ",
+                "summary": "แสดงข้อมูลหนังสือที่ต้องการ",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "ชื่อของหนังสือที่ต้องการค้นหา",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "author",
+                        "description": "ชื่อผู้แต่งของหนังสือ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "description": "หมวดหมู่ของหนังสือ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/globalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/top_borrowed_book": {
+            "get": {
+                "description": "ดึงข้อมูลหนังสือที่ถูกยืมมากที่สุด",
+                "summary": "ดึงข้อมูลหนังสือที่ถูกยืมมากที่สุด",
+                "responses": {
+                    "200": {
+                        "description": "รายการหนังสือที่ถูกยืมมากที่สุด",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/topBorrowedBookResponse"
                                 }
                             }
                         }
@@ -343,6 +361,35 @@ var doc = `{
                 "description",
                 "available_qty"
             ]
+        },
+        "topBorrowedBookResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Successfully get top borrowed book"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "Success"
+                },
+                "value": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "example": "Book A"
+                            },
+                            "borrow_count": {
+                                "type": "integer",
+                                "example": 1
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }`

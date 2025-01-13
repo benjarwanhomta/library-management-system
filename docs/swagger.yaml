@@ -60,74 +60,85 @@ paths:
               schema:
                 $ref: "#/definitions/bookDetailResponse"
     
-    /delete_book/{book_id}:
-      delete:
-        description: "ลบข้อมูลหนังสือ"
-        summary: "ลบข้อมูลหนังสือตาม book_id"
-        parameters:
-          - name: book_id
-            in: path
-            description: "ID ของหนังสือ"
-            required: true
-            type: integer
-        responses:
-          200:
-            description: "ข้อมูลหนังสือ"
-            content:
-              application/json:
-                schema:
-                  $ref: "#/definitions/globalResponse"
+  /delete_book/{book_id}:
+    delete:
+      description: "ลบข้อมูลหนังสือ"
+      summary: "ลบข้อมูลหนังสือตาม book_id"
+      parameters:
+        - name: book_id
+          in: path
+          description: "ID ของหนังสือ"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "ลบข้อมูลหนังสือสำเร็จ"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/globalResponse"
     
-    /edit_book:
-      put:
-        description: "แก้ไขข้อมูลหนังสือ"
-        summary: "แก้ไขข้อมูลหนังสือ"
-        parameters:
-          - in: body
-            name: book
-            description: "แก้ไขข้อมูลหนังสือที่ต้องการเพิ่ม"
-            required: true
-            schema:
-              $ref: "#/definitions/editBookReq"
-        responses:
-          200:
-            description: "OK"
-            content:
-              application/json:
-                schema:
-                  $ref: "#/definitions/globalResponse"
+  /edit_book:
+    put:
+      description: "แก้ไขข้อมูลหนังสือ"
+      summary: "แก้ไขข้อมูลหนังสือ"
+      parameters:
+        - in: body
+          name: book
+          description: "แก้ไขข้อมูลหนังสือที่ต้องการเพิ่ม"
+          required: true
+          schema:
+            $ref: "#/definitions/editBookReq"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/globalResponse"
 
-    /search_book_all:
-      get:
-        description: "แสดงข้อมูลหนังสือที่ต้องการ"
-        summary: "แสดงข้อมูลหนังสือที่ต้องการ"
-        parameters:
-          - in: query
-            name: title
-            description: "ชื่อของหนังสือที่ต้องการค้นหา"
-            required: false
-            schema:
-              type: string
-          - in: query
-            name: author
-            description: "ชื่อผู้แต่งของหนังสือ"
-            required: false
-            schema:
-              type: string
-          - in: query
-            name: category
-            description: "หมวดหมู่ของหนังสือ"
-            required: false
-            schema:
-              type: string
-        responses:
-          200:
-            description: "OK"
-            content:
-              application/json:
-                schema:
-                  $ref: "#/definitions/globalResponse"
+  /search_book_all:
+    get:
+      description: "แสดงข้อมูลหนังสือที่ต้องการ"
+      summary: "แสดงข้อมูลหนังสือที่ต้องการ"
+      parameters:
+        - in: query
+          name: title
+          description: "ชื่อของหนังสือที่ต้องการค้นหา"
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: author
+          description: "ชื่อผู้แต่งของหนังสือ"
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: category
+          description: "หมวดหมู่ของหนังสือ"
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/globalResponse"
 
+  /top_borrowed_book:
+    get:
+      description: "ดึงข้อมูลหนังสือที่ถูกยืมมากที่สุด"
+      summary: "ดึงข้อมูลหนังสือที่ถูกยืมมากที่สุด"
+      responses:
+        200:
+          description: "รายการหนังสือที่ถูกยืมมากที่สุด"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/topBorrowedBookResponse"
 
 definitions:
   globalResponse:
@@ -243,3 +254,24 @@ definitions:
       - isbn
       - description
       - available_qty
+
+  topBorrowedBookResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "Successfully get top borrowed book"
+      status:
+        type: string
+        example: "Success"
+      value:
+        type: array
+        items:
+          type: object
+          properties:
+            title:
+              type: string
+              example: "Book A"
+            borrow_count:
+              type: integer
+              example: 1

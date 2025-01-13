@@ -166,9 +166,3 @@ func (h *BookHandler) SearchBookAll(c *fiber.Ctx) error {
 		"value":   bookResp,
 	})
 }
-
-// TopBorrowedBook handles Get request to get a top borrowed book.
-func (h *BookHandler) TopBorrowedBook(c *fiber.Ctx) error {
-
-	return c.Status(fiber.StatusOK).JSON(nil)
-}
