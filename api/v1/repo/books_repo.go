@@ -103,3 +103,32 @@ func (r *bookRepo) UpdateBook(book *models.Books) (*models.Books, error) {
 
 	return book, nil
 }
+
+// GetAllByTitleAuthorCategory implements service.BooksRepository.
+func (r *bookRepo) GetAllByTitleAuthorCategory(title, author, category string) ([]models.Books, error) {
+	var books []models.Books
+	query := r.DB.Joins("JOIN authors ON authors.author_id = books.author_id").Preload("Author").
+		Joins("JOIN categories ON categories.category_id = books.category_id").Preload("Category")
+
+	if title != "" {
+		query = query.Where("books.title LIKE ?", "%"+title+"%")
+	}
+	if author != "" {
+		query = query.Where("authors.name LIKE ?", "%"+author+"%")
+	}
+	if category != "" {
+		query = query.Where("categories.category_name LIKE ?", "%"+category+"%")
+	}
+
+	result := query.Find(&books)
+	if result.Error != nil {
+		log.Printf("GetAllByTitleAuthorCategory is has error: %s", result.Error.Error())
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return []models.Books{}, nil
+	}
+
+	return books, nil
+}

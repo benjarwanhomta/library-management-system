@@ -147,8 +147,24 @@ func (h *BookHandler) DetailBookByBookID(c *fiber.Ctx) error {
 
 // SearchBookAll handles Get request to get a search book all.
 func (h *BookHandler) SearchBookAll(c *fiber.Ctx) error {
+	title := c.Query("title")
+	author := c.Query("author")
+	category := c.Query("category")
 
-	return c.Status(fiber.StatusOK).JSON(nil)
+	// GetDetailBookByBookID
+	bookResp, err := h.bookService.GetSearchBookAll(title, author, category)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+			"status":  "Fail",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Successfully search book all",
+		"status":  "Success",
+		"value":   bookResp,
+	})
 }
 
 // TopBorrowedBook handles Get request to get a top borrowed book.

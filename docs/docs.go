@@ -28,6 +28,53 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/search_book_all": {
+            "get": {
+                "description": "แสดงข้อมูลหนังสือที่ต้องการ",
+                "summary": "แสดงข้อมูลหนังสือที่ต้องการ",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "ชื่อของหนังสือที่ต้องการค้นหา",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "author",
+                        "description": "ชื่อผู้แต่งของหนังสือ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "description": "หมวดหมู่ของหนังสือ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/globalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/add_book": {
             "post": {
                 "description": "เพิ่มข้อมูลหนังสือ",

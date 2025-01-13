@@ -11,4 +11,5 @@ type BooksRepository interface {
 	GetSingleByBookID(bookID int) (*models.Books, error)
 	DeleteByBookID(bookID int) error
 	UpdateBook(book *models.Books) (*models.Books, error)
+	GetAllByTitleAuthorCategory(title, author, category string) ([]models.Books, error)
 }

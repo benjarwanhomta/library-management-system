@@ -13,7 +13,7 @@ type BookService interface {
 	UpdateBook(book *models.Books) (*models.Books, error)
 	DeleteBookByBookID(bookID int) error
 	GetDetailBookByBookID(bookID int) (*models.Books, error)
-	GetSearchBookAll(bookID int) ([]models.Books, error)
+	GetSearchBookAll(title, author, category string) ([]models.Books, error)
 	GetTopBorrowedBook(bookID int) ([]models.Books, error)
 }
 
@@ -100,8 +100,14 @@ func (s *bookService) GetDetailBookByBookID(bookID int) (*models.Books, error) {
 }
 
 // GetSearchBookAll implements BookService.
-func (s *bookService) GetSearchBookAll(bookID int) ([]models.Books, error) {
-	panic("unimplemented")
+func (s *bookService) GetSearchBookAll(title, author, category string) ([]models.Books, error) {
+	bookAll, err := s.bookRepo.GetAllByTitleAuthorCategory(title, author, category)
+	if err != nil {
+		return nil, err
+	}
+
+	return bookAll, nil
+
 }
 
 // GetTopBorrowedBook implements BookService.

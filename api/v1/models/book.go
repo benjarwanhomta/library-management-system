@@ -11,6 +11,6 @@ type Books struct {
 	Description  string `json:"description"`
 	AvailableQTY int    `json:"available_qty"`
 
-	Author   Author   `gorm:"foreignKey:AuthorID;references:AuthorID"`
-	Category Category `gorm:"foreignKey:CategoryID;references:CategoryID"`
+	Author   Authors    `gorm:"foreignKey:AuthorID;references:AuthorID"`
+	Category Categories `gorm:"foreignKey:CategoryID;references:CategoryID"`
 }

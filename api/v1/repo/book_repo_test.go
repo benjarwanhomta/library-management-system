@@ -185,3 +185,63 @@ func TestCreatdAndUpdateAndDeleteBook(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Nil(t, err)
 }
+
+func TestGetAllByTitleAuthorCategory(t *testing.T) {
+	bookRepo := repo.NewBooksRepo(db)
+
+	// สร้างข้อมูลตัวอย่าง
+	author := models.Authors{Name: "John Doe"}
+	category := models.Categories{CategoryName: "Programming"}
+
+	// บันทึกข้อมูลตัวอย่างลงในฐานข้อมูล
+	db.Create(&author)
+	db.Create(&category)
+
+	db.Where(`name = ?`, author.Name).Find(&author)
+	db.Where(`category_name = ?`, category.CategoryName).Find(&category)
+
+	book := models.Books{
+		Title:        "Go Programming",
+		AuthorID:     author.AuthorID,
+		CategoryID:   category.CategoryID,
+		ISBN:         "123456",
+		Description:  "A test book for integration test",
+		AvailableQTY: 0,
+	}
+
+	db.Create(&book)
+
+	db.Where(`title = ?`, book.Title).Find(&book)
+
+	// ทดสอบฟังก์ชัน GetSingleByTitleAuthorCategory
+	t.Run("Test with title", func(t *testing.T) {
+		books, err := bookRepo.GetAllByTitleAuthorCategory("Go", "", "")
+		assert.NoError(t, err)
+		assert.Len(t, books, 1)
+		assert.Equal(t, "Go Programming", books[0].Title)
+	})
+
+	t.Run("Test with author", func(t *testing.T) {
+		books, err := bookRepo.GetAllByTitleAuthorCategory("", "John Doe", "")
+		assert.NoError(t, err)
+		assert.Len(t, books, 1)
+		assert.Equal(t, author.AuthorID, books[0].AuthorID)
+	})
+
+	t.Run("Test with category", func(t *testing.T) {
+		books, err := bookRepo.GetAllByTitleAuthorCategory("", "", "Programming")
+		assert.NoError(t, err)
+		assert.Len(t, books, 1)
+		assert.Equal(t, category.CategoryID, books[0].CategoryID)
+	})
+
+	t.Run("Test with no results", func(t *testing.T) {
+		books, err := bookRepo.GetAllByTitleAuthorCategory("Non-Existing Title", "Non-Existing Author", "Non-Existing Category")
+		assert.NoError(t, err)
+		assert.Len(t, books, 0)
+	})
+
+	db.Where(`book_id = ?`, book.BookID).Delete(&book)
+	db.Where(`author_id = ?`, author.AuthorID).Delete(&author)
+	db.Where(`category_id = ?`, category.CategoryID).Delete(&category)
+}
